@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.model.UserMealWithExcess;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -44,12 +43,30 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
+        /*Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(Collectors.toMap(meal -> (meal.getDateTime().toLocalDate()), UserMeal::getCalories, Integer::sum));
         return meals.stream()
                 .filter(meal -> TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime))
                 .map(meal -> new UserMealWithExcess(meal.getDateTime(), meal.getDescription(), meal.getCalories(),
                         caloriesSumByDate.get(meal.getDateTime().toLocalDate()) > caloriesPerDay))
+                .collect(Collectors.toList());*/
+        return meals.stream()
+                .map((e) -> {
+                    UserMealWithExcess userMealWithExcess;
+                    if ((meals.stream()
+                            .filter(s -> s.getDateTime().toLocalDate().equals(e.getDateTime().toLocalDate()))
+                            .map(UserMeal::getCalories))
+                            .mapToInt(Integer::intValue)
+                            .sum() > caloriesPerDay) {
+                        userMealWithExcess = new UserMealWithExcess(e.getDateTime(),
+                                e.getDescription(), e.getCalories(), true);
+                    } else {
+                        userMealWithExcess = new UserMealWithExcess(e.getDateTime(),
+                                e.getDescription(), e.getCalories(), false);
+                    }
+                    return userMealWithExcess;
+                })
+                .filter((e) -> TimeUtil.isBetweenHalfOpen(e.getDateTime().toLocalTime(), startTime, endTime))
                 .collect(Collectors.toList());
     }
 }
