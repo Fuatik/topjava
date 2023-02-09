@@ -1,18 +1,33 @@
 package ru.javawebinar.topjava.service;
 
+import ru.javawebinar.topjava.dao.memory.MemoryMealsDao;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalTime;
 import java.util.List;
 
-public interface MealsService {
-    void create(Meal meal);
+public class MealsService {
+    private final MemoryMealsDao mealsDao;
 
-    List<MealTo> readAll();
+    public MealsService(MemoryMealsDao memoryMealsDao) {
+        this.mealsDao = memoryMealsDao;
+    }
 
-    Meal read(Integer id);
+    public void save(Meal meal) {
+        mealsDao.save(meal);
+    }
 
-    void update(Meal meal);
+    public List<MealTo> readAll() {
+        return MealsUtil.filteredByStreams(mealsDao.readAll(), LocalTime.MIN, LocalTime.MAX, 2000);
+    }
 
-    void delete(Integer id);
+    public Meal read(Integer id) {
+        return mealsDao.read(id);
+    }
+
+    public void delete(Integer id) {
+        mealsDao.delete(id);
+    }
 }

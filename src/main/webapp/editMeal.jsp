@@ -1,3 +1,4 @@
+<jsp:useBean id="meal" scope="request" type="ru.javawebinar.topjava.model.Meal"/>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="f" uri="http://topjava.javawebinar.ru/functions" %>
@@ -6,24 +7,25 @@
     <title>EditMeal</title>
 </head>
 <body>
-<h3><a href="index.html">Home</a></h3>
+<a href="index.html">Home</a>
 <hr>
 <h3>Edit Meal</h3>
-<form method="POST" name="edit">
+<form method="POST" action="meals">
+    <input type="hidden" name="id" value="${meal.id}">
     DateTime:
     <input type="datetime-local"
            name="dateTime"
-           value="<c:out value="${meal.dateTime}"/>"/> <br/>
+           value="${meal.dateTime}"/> <br/>
     <br/>
     Description:
     <input type="text" size="30"
            name="description"
-           value="<c:out value="${meal.description}"/>"/> <br/>
+           value="${meal.description}"/> <br/>
     <br/>
     Calories:
     <input type="text"
            name="calories"
-           value="<c:out value="${meal.calories}"/>"/> <br/>
+           value="${meal.calories}"/> <br/>
     <br/>
     <p>
         <button type="submit">Save</button>

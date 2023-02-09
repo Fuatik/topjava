@@ -9,7 +9,7 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Meals</h2>
-<h4><a href="editMeal?action=edit">Add meal</a></h4>
+<h4><a href="meals?action=edit">Add meal</a></h4>
 <table border=1>
     <thead>
     <tr>
@@ -19,13 +19,14 @@
         <th colspan=2>Action</th>
     </tr>
     <c:forEach var="meal" items="${mealsTo}">
+        <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.model.MealTo"/>
     <p>
         <tr style="color: ${meal.excess ? 'red' : 'green'}">
             <td>${f:formatLocalDateTime(meal.dateTime)}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
-            <td><a href="editMeal?action=edit&id=<c:out value="${meal.id}"/>">Update</a></td>
-            <td><a href="meals?action=delete&id=<c:out value="${meal.id}"/>">Delete</a></td>
+            <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
+            <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
         </tr>
     <p>
         </c:forEach>

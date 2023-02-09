@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class MealsUtil {
 
-    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public static void main(String[] args) {
 
@@ -37,7 +37,7 @@ public class MealsUtil {
     }
 
     public static String formatLocalDateTime(LocalDateTime localDateTime) {
-        return localDateTime.format(dtf);
+        return localDateTime.format(DATE_TIME_FORMATTER);
     }
 
 }
