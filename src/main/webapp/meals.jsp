@@ -1,3 +1,4 @@
+<%@ page import="ru.javawebinar.topjava.util.DateTimeUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -23,6 +24,30 @@
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
+    <form id="filter">
+        <div class="row">
+            <div class="col-2">
+                <label for="startDate">От даты (включая)</label>
+                <input type="date" class="form-control" name="startDate" id="startDate" autocomplete="off" value="2000-01-01">
+            </div>
+            <div class="col-2">
+                <label for="endDate">До даты (включая)</label>
+                <input type="date" class="form-control" name="endDate" id="endDate" autocomplete="off" value="3000-12-31">
+            </div>
+            <div class="offset-2 col-3">
+                <label for="startTime">От времени (включая)</label>
+                <input type="time" class="form-control" name="startTime" id="startTime" autocomplete="off" value="00:00">
+            </div>
+            <div class="col-3">
+                <label for="endTime">До времени (исключая)</label>
+                <input type="time" class="form-control" name="endTime" id="endTime" autocomplete="off" value="23:59">
+            </div>
+        </div>
+        <button type="submit">
+            Отфильтровать
+        </button>
+    </form>
+    <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
@@ -34,11 +59,11 @@
         </tr>
         </thead>
         <c:forEach items="${requestScope.meals}" var="meal">
-            <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
             <tr class="${meal.excess ? 'excess' : 'normal'}">
                 <td>
-                        <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
-                        <%--<%=TimeUtil.toString(meal.getDateTime())%>--%>
+                        <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}
+                        <%=DateTimeUtil.toString(meal.getDateTime())%>--%>
                         <%--${fn:replace(meal.dateTime, 'T', ' ')}--%>
                         ${fn:formatDateTime(meal.dateTime)}
                 </td>
