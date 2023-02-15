@@ -43,13 +43,7 @@ public class InMemoryUserRepository implements UserRepository {
     public List<User> getAll() {
         log.info("getAll");
         List<User> users = new ArrayList<>(repository.values());
-        users.sort((o1, o2) -> {
-                    if (o2.getName().equals(o1.getName())) {
-                        return o2.getEmail().compareToIgnoreCase(o1.getEmail());
-                    }
-                    return o2.getName().compareToIgnoreCase(o1.getName());
-                }
-        );
+        users.sort(Comparator.comparing(User::getName).thenComparing(User::getEmail));
         return users;
     }
 

@@ -11,8 +11,8 @@ public class DateTimeUtil {
     public static boolean isBetweenHalfOpen(LocalTime lt, LocalTime startTime, LocalTime endTime) {
         return lt.compareTo(startTime) >= 0 && lt.compareTo(endTime) < 0;
     }
-    public static boolean dateIsBetween(LocalDate lt, LocalDate startDate, LocalDate endDate) {
-        return lt.compareTo(startDate) >= 0 && lt.compareTo(endDate) <= 0;
+    public static boolean dateIsBetween(LocalDate ld, LocalDate startDate, LocalDate endDate) {
+        return ld.compareTo(startDate) >= 0 && ld.compareTo(endDate) <= 0;
     }
 
     public static String toString(LocalDateTime ldt) {
