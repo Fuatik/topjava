@@ -11,37 +11,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
-    public static final int USER_ID = START_SEQ;
-    public static final int ADMIN_ID = START_SEQ + 1;
-    public static final int GUEST_ID = START_SEQ + 2;
-    public static final int USER_MEAL = START_SEQ + 3;
-    public static final int ADMIN_MEAL = START_SEQ + 6;
-    public static final int GUEST_MEAL = START_SEQ + 9;
+    public static final int USER_MEAL_ID = START_SEQ + 3;
     public static final int NOT_FOUND = 10;
-    public static final LocalDate START_DATE =  LocalDate.parse("2020-01-12");
-    public static final LocalDate END_DATE = LocalDate.parse("2020-01-12");
+    public static final LocalDate START_DATE =  LocalDate.of(2020, 1, 12);
+    public static final LocalDate END_DATE = LocalDate.of(2020, 1, 12);
 
-    public static final Meal userMeal = new Meal(USER_MEAL, LocalDateTime.parse("2020-01-12T10:00"), "Завтрак", 400);
-
-    public static final Meal guest = new Meal(GUEST_MEAL, LocalDateTime.parse("2020-01-12T10:00"), "Завтрак", 600);
+    public static final Meal userMeal = new Meal(USER_MEAL_ID, LocalDateTime.of(2020, 1, 12, 10, 0), "Завтрак", 400);
 
     public static final List<Meal> userMeals = Arrays.asList(
-            new Meal (100005, LocalDateTime.parse("2020-01-12T19:00"), "Ужин", 600),
-            new Meal (100004, LocalDateTime.parse("2020-01-12T13:00"), "Обед", 1000),
-            new Meal (100003, LocalDateTime.parse("2020-01-12T10:00"), "Завтрак", 400)
+            new Meal (START_SEQ + 5, LocalDateTime.of(2020, 1, 12, 19, 0), "Ужин", 600),
+            new Meal (START_SEQ + 4, LocalDateTime.of(2020, 1, 12, 13, 0), "Обед", 1000),
+            userMeal
     );
-    public static final List<Meal> adminMeals = Arrays.asList(
-            new Meal (100007,LocalDateTime.parse("2020-01-12T12:00"), "Обед", 1000),
-            new Meal (100006, LocalDateTime.parse("2020-01-12T10:00"), "Завтрак", 500)
+    public static final List<Meal> filteredAdminMeals = Arrays.asList(
+            new Meal (START_SEQ + 7,LocalDateTime.of(2020, 1, 12, 12 ,0), "Обед", 1000),
+            new Meal (START_SEQ + 6, LocalDateTime.of(2020, 1, 12 , 10, 0), "Завтрак", 500)
     );
 
     public static Meal getNew() {
-        return new Meal(null, LocalDateTime.parse("2020-02-20T20:20"), "НОВЫЙ", 666);
+        return new Meal(null, LocalDateTime.of(2020, 2, 20, 20, 20), "НОВЫЙ", 666);
     }
 
     public static Meal getUpdated() {
         Meal updated = new Meal(userMeal);
-        updated.setDateTime(LocalDateTime.parse("2021-12-21T21:21"));
+        updated.setDateTime(LocalDateTime.of(2021, 12, 21, 21, 21));
         updated.setDescription("UpdatedDescription");
         updated.setCalories(999);
         return updated;
@@ -49,10 +42,6 @@ public class MealTestData {
 
     public static void assertMatch(Meal actual, Meal expected) {
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
-    }
-
-    public static void assertMatch(Iterable<Meal> actual, Meal... expected) {
-        assertMatch(actual, Arrays.asList(expected));
     }
 
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {

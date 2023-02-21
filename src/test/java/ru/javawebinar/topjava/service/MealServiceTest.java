@@ -9,16 +9,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.UserTestData.NOT_FOUND;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.UserTestData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -39,19 +38,30 @@ public class MealServiceTest {
 
     @Test
     public void get() {
-        Meal meal = service.get(USER_MEAL, USER_ID);
+        Meal meal = service.get(USER_MEAL_ID, USER_ID);
         assertMatch(meal, userMeal);
     }
 
     @Test
     public void gotNotFound() {
-        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, USER_ID));
+        assertThrows(NotFoundException.class, () -> service.get(MealTestData.NOT_FOUND, USER_ID));
+    }
+
+    @Test
+    public void gotAnotherUserMeal() {
+        assertThrows(NotFoundException.class, () -> service.get(USER_MEAL_ID, ADMIN_ID));
     }
 
     @Test
     public void getBetweenInclusive() {
         List<Meal> meals = service.getBetweenInclusive(START_DATE, END_DATE, ADMIN_ID);
-        assertMatch(meals, adminMeals);
+        assertMatch(meals, filteredAdminMeals);
+    }
+
+    @Test
+    public void getBetweenNullDates() {
+        List<Meal> meals = service.getBetweenInclusive(null, null, USER_ID);
+        assertMatch(meals, userMeals);
     }
 
     @Test
@@ -62,32 +72,46 @@ public class MealServiceTest {
 
     @Test
     public void delete() {
-        service.delete(USER_MEAL, USER_ID);
-        assertThrows(NotFoundException.class, () -> service.get(USER_MEAL, USER_ID));
+        service.delete(USER_MEAL_ID, USER_ID);
+        assertThrows(NotFoundException.class, () -> service.get(USER_MEAL_ID, USER_ID));
     }
 
     @Test
     public void deletedNotFound() {
-        assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND, USER_ID));
+        assertThrows(NotFoundException.class, () -> service.delete(MealTestData.NOT_FOUND, USER_ID));
+    }
+
+    @Test
+    public void deletedAnotherUserMeal() {
+        assertThrows(NotFoundException.class, () -> service.delete(USER_MEAL_ID, ADMIN_ID));
     }
 
     @Test
     public void update() {
-        Meal updated = getUpdated();
+        Meal updated = MealTestData.getUpdated();
         service.update(updated, USER_ID);
-        assertMatch(service.get(USER_MEAL, USER_ID), getUpdated());
+        assertMatch(service.get(USER_MEAL_ID, USER_ID), MealTestData.getUpdated());
     }
 
     @Test
     public void updatedNotFound() {
-        assertThrows(NotFoundException.class, () -> service.update(guest, USER_ID));
+        Meal updated = MealTestData.getNew();
+        updated.setId(MealTestData.NOT_FOUND);
+        assertThrows(NotFoundException.class, () -> service.update(updated, USER_ID));
+    }
+
+    @Test
+    public void updatedAnotherUserMeal() {
+        Meal updated = MealTestData.getNew();
+        updated.setId(USER_MEAL_ID);
+        assertThrows(NotFoundException.class, () -> service.update(updated, ADMIN_ID));
     }
 
     @Test
     public void create() {
-        Meal created = service.create(getNew(), USER_ID);
+        Meal created = service.create(MealTestData.getNew(), USER_ID);
         Integer newId = created.getId();
-        Meal newMeal = getNew();
+        Meal newMeal = MealTestData.getNew();
         newMeal.setId(newId);
         assertMatch(created, newMeal);
         assertMatch(service.get(newId, USER_ID), newMeal);
@@ -96,6 +120,6 @@ public class MealServiceTest {
     @Test
     public void duplicateDateTimeCreate() {
         assertThrows(DataAccessException.class, () ->
-                service.create(new Meal(null, LocalDateTime.parse("2020-01-12T10:00"), "Завтрак", 400), USER_ID));
+                service.create(new Meal(null, userMeal.getDateTime(), "Завтрак", 400), USER_ID));
     }
 }
