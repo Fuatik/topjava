@@ -11,7 +11,7 @@ public class Profiles {
             POSTGRES_DB = "postgres",
             HSQL_DB = "hsqldb";
 
-    public static final String ACTIVE_DB = HSQL_DB;
+    public static final String ACTIVE_DB = POSTGRES_DB;
 
     public static String getActiveDbProfile() {
         return ACTIVE_DB;
