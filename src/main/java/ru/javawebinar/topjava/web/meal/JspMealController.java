@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web;
+package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
@@ -40,7 +39,7 @@ public class JspMealController {
     }
 
     @GetMapping("meals/filter")
-    public ModelAndView getBetween(HttpServletRequest request) {
+    public String getBetween(Model model, HttpServletRequest request) {
         int userId = SecurityUtil.authUserId();
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
@@ -48,28 +47,26 @@ public class JspMealController {
         LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
         log.info("getBetween dates({} - {}) time({} - {}) for user {}", startDate, endDate, startTime, endTime, userId);
         final List<Meal> mealsDateFiltered = mealService.getBetweenInclusive(startDate, endDate, userId);
-        ModelAndView mav = new ModelAndView("meals");
-        mav.addObject("meals",
+        model.addAttribute("meals",
                 MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime));
-        return mav;
+        return "meals";
     }
 
-    @PostMapping("/meals/create")
-    public String create(Map<String, Object> model) {
+    @GetMapping("/meals/create")
+    public String create(Model model) {
         final Meal meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
         log.info("create {} for user {}", meal, SecurityUtil.authUserId());
-        model.put("meal", meal);
+        model.addAttribute("meal", meal);
         return "mealForm";
     }
 
-    @PostMapping("/meals/{id}/update")
-    public ModelAndView update(@PathVariable String id) {
+    @GetMapping("/meals/{id}/update")
+    public String update(Model model, @PathVariable String id) {
         int userId = SecurityUtil.authUserId();
-        ModelAndView mav = new ModelAndView("mealForm");
         final Meal meal = mealService.get(Integer.parseInt(id), userId);
         log.info("update {} for user {}", meal, userId);
-        mav.addObject("meal", meal);
-        return mav;
+        model.addAttribute("meal", meal);
+        return "mealForm";
     }
 
     @PostMapping("/meals/{id}/delete")
