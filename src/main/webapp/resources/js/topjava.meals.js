@@ -8,6 +8,10 @@ const ctx = {
             url: mealAjaxUrl + "filter",
             data: $("#filter").serialize()
         }).done(updateTableByData)
+    },
+    clearFilter() {
+        $("#filter")[0].reset();
+        $.get("profile/meals/", updateTableByData);
     }
 };
 

@@ -4,11 +4,11 @@
 <%@ taglib prefix="fn" uri="http://topjava.javawebinar.ru/functions" %>
 
 <html>
-<jsp:include page="WEB-INF/jsp/fragments/headTag.jsp"/>
+<jsp:include page="fragments/headTag.jsp"/>
 <body>
 <script src="resources/js/topjava.common.js" defer></script>
 <script src="resources/js/topjava.meals.js" defer></script>
-<jsp:include page="WEB-INF/jsp/fragments/bodyHeader.jsp"/>
+<jsp:include page="fragments/bodyHeader.jsp"/>
 
 <div class="jumbotron pt-4">
     <div class="container">
@@ -38,6 +38,10 @@
                 </form>
             </div>
             <div class="card-footer text-right">
+                <button class="btn btn-danger" onclick="ctx.clearFilter()">
+                    <span class="fa fa-remove"></span>
+                    <spring:message code="common.cancel"/>
+                </button>
                 <button class="btn btn-primary" onclick="ctx.updateTable()">
                     <span class="fa fa-filter"></span>
                     <spring:message code="meal.filter"/>
@@ -121,6 +125,6 @@
         </div>
     </div>
 </div>
-<jsp:include page="WEB-INF/jsp/fragments/footer.jsp"/>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
