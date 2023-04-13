@@ -20,21 +20,11 @@ function clearFilter() {
 $(function () {
     makeEditable(
         $("#datatable").DataTable({
-            "ajax": {
-                "url": mealAjaxUrl,
-                "dataSrc": ""
-            },
             "paging": false,
             "info": true,
             "columns": [
                 {
-                    "data": "dateTime",
-                    "render": function (date, type, row) {
-                        if (type == 'display') {
-                            return date.replace('T', ' ');
-                        }
-                        return date;
-                    }
+                    "data": "dateTime"
                 },
                 {
                     "data": "description"
@@ -44,13 +34,11 @@ $(function () {
                 },
                 {
                     "defaultContent": "Edit",
-                    "orderable": false,
-                    "render": renderEditBtn
+                    "orderable": false
                 },
                 {
                     "defaultContent": "Delete",
-                    "orderable": false,
-                    "render": renderDeleteBtn
+                    "orderable": false
                 }
             ],
             "order": [
@@ -58,10 +46,7 @@ $(function () {
                     0,
                     "desc"
                 ]
-            ],
-            "createdRow": function (row, data, dataIndex) {
-                $(row).attr("data-meal-excess", data.excess)
-            }
+            ]
         })
     );
 });
